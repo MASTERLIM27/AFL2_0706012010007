@@ -2,7 +2,7 @@ part of 'services.dart';
 
 class MasterDataService {
   static Future<List<Province>> getProvince() async {
-    var response = await http.get(Uri.https(Const.baseUrl, "/starter/province"),
+    var response = await http.get(Uri.https(Const.baseUrl, '/starter/province'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'key': Const.apiKey,

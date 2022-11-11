@@ -6,7 +6,7 @@ class UiLoading {
         alignment: Alignment.center,
         width: double.infinity,
         height: double.infinity,
-        color: Colors.black26,
+        color: Colors.transparent,
         child: const SpinKitFadingCircle(size: 50, color: Color(0xFFFF5555)));
   }
   
@@ -15,7 +15,7 @@ class UiLoading {
         alignment: Alignment.center,
         width: 30,
         height: 30,
-        color: Colors.black26,
+        color: Colors.transparent,
         child: const SpinKitFadingCircle(size: 50, color: Color(0xFFFF5555)));
   }
 }

@@ -1,14 +1,11 @@
 part of 'models.dart';
 
-class City extends Equatable {
-  final String? cityId;
-  final String? provinceId;
-  final String? province;
-  final String? type;
-  final String? cityName;
-  final String? postalCode;
+City cityFromJson(String str) => City.fromJson(json.decode(str));
 
-  const City({
+String cityToJson(City data) => json.encode(data.toJson());
+
+class City {
+  City({
     this.cityId,
     this.provinceId,
     this.province,
@@ -17,66 +14,28 @@ class City extends Equatable {
     this.postalCode,
   });
 
-  factory City.fromMap(Map<String, dynamic> data) => City(
-        cityId: data['city_id'] as String?,
-        provinceId: data['province_id'] as String?,
-        province: data['province'] as String?,
-        type: data['type'] as String?,
-        cityName: data['city_name'] as String?,
-        postalCode: data['postal_code'] as String?,
+  String? cityId;
+  String? provinceId;
+  String? province;
+  String? type;
+  String? cityName;
+  String? postalCode;
+
+  factory City.fromJson(Map<String, dynamic> json) => City(
+        cityId: json["city_id"],
+        provinceId: json["province_id"],
+        province: json["province"],
+        type: json["type"],
+        cityName: json["city_name"],
+        postalCode: json["postal_code"],
       );
 
-  Map<String, dynamic> toMap() => {
-        'city_id': cityId,
-        'province_id': provinceId,
-        'province': province,
-        'type': type,
-        'city_name': cityName,
-        'postal_code': postalCode,
+  Map<String, dynamic> toJson() => {
+        "city_id": cityId,
+        "province_id": provinceId,
+        "province": province,
+        "type": type,
+        "city_name": cityName,
+        "postal_code": postalCode,
       };
-
-  /// `dart:convert`
-  ///
-  /// Parses the string and returns the resulting Json object as [City].
-  factory City.fromJson(String data) {
-    return City.fromMap(json.decode(data) as Map<String, dynamic>);
-  }
-
-  /// `dart:convert`
-  ///
-  /// Converts [City] to a JSON string.
-  String toJson() => json.encode(toMap());
-
-  City copyWith({
-    String? cityId,
-    String? provinceId,
-    String? province,
-    String? type,
-    String? cityName,
-    String? postalCode,
-  }) {
-    return City(
-      cityId: cityId ?? this.cityId,
-      provinceId: provinceId ?? this.provinceId,
-      province: province ?? this.province,
-      type: type ?? this.type,
-      cityName: cityName ?? this.cityName,
-      postalCode: postalCode ?? this.postalCode,
-    );
-  }
-
-  @override
-  bool get stringify => true;
-
-  @override
-  List<Object?> get props {
-    return [
-      cityId,
-      provinceId,
-      province,
-      type,
-      cityName,
-      postalCode,
-    ];
-  }
 }

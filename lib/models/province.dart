@@ -6,27 +6,15 @@ class Province extends Equatable {
 
   const Province({this.provinceId, this.province});
 
-  factory Province.fromMap(Map<String, dynamic> data) => Province(
-        provinceId: data['province_id'] as String?,
-        province: data['province'] as String?,
+  factory Province.fromJson(Map<String, dynamic> json) => Province(
+        provinceId: json['province_id'] as String?,
+        province: json['province'] as String?,
       );
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         'province_id': provinceId,
         'province': province,
       };
-
-  /// `dart:convert`
-  ///
-  /// Parses the string and returns the resulting Json object as [Province].
-  factory Province.fromJson(String data) {
-    return Province.fromMap(json.decode(data) as Map<String, dynamic>);
-  }
-
-  /// `dart:convert`
-  ///
-  /// Converts [Province] to a JSON string.
-  String toJson() => json.encode(toMap());
 
   Province copyWith({
     String? provinceId,
