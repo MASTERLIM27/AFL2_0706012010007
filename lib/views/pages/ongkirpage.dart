@@ -69,7 +69,7 @@ class _OngkirpageState extends State<Ongkirpage> {
               children: [
                 // Flexible untuk form
                 Flexible(
-                  flex: 2,
+                  flex: 5,
                   child: Column(
                     children: [
                       Padding(
@@ -361,7 +361,9 @@ class _OngkirpageState extends State<Ongkirpage> {
                 // Flexible untuk tampilkan data
                 Flexible(
                   flex: 2,
-                  child: Container(),
+                  child: Container(
+
+                  ),
                 )
               ],
             ),
