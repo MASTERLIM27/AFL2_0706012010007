@@ -8,7 +8,7 @@ class Ongkirpage extends StatefulWidget {
 }
 
 class _OngkirpageState extends State<Ongkirpage> {
-  String dropdownvalue = "jne";
+  String selectedkurir = "jne";
   bool isLoading = false;
 
   var kurir = ["jne", "pos", "tiki"];
@@ -30,7 +30,8 @@ class _OngkirpageState extends State<Ongkirpage> {
     return listProvince;
   }
 
-  dynamic cityId;
+  dynamic cityIdOri;
+  dynamic cityIdDes;
   dynamic cityDataOrigin;
   dynamic cityDataDestination;
   dynamic originCity;
@@ -44,6 +45,21 @@ class _OngkirpageState extends State<Ongkirpage> {
     });
 
     return listCity;
+  }
+
+  String ori = '';
+  String des = '';
+
+  List<Costs> listCosts = [];
+  Future<dynamic> getCostsData() async {
+    await RajaOngkirService.getMyOngkir(
+            cityIdOri, cityIdDes, int.parse(ctrlBerat.text), selectedkurir)
+        .then((value) {
+      setState(() {
+        listCosts = value;
+      });
+      print(listCosts.toString());
+    });
   }
 
   @override
@@ -69,7 +85,7 @@ class _OngkirpageState extends State<Ongkirpage> {
               children: [
                 // Flexible untuk form
                 Flexible(
-                  flex: 5,
+                  flex: 3,
                   child: Column(
                     children: [
                       Padding(
@@ -78,7 +94,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             DropdownButton(
-                                value: dropdownvalue,
+                                value: selectedkurir,
                                 icon: Icon(Icons.arrow_drop_down),
                                 items: kurir.map((String items) {
                                   return DropdownMenuItem(
@@ -88,7 +104,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                                 }).toList(),
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    dropdownvalue = newValue!;
+                                    selectedkurir = newValue!;
                                   });
                                 }),
                             SizedBox(
@@ -133,7 +149,8 @@ class _OngkirpageState extends State<Ongkirpage> {
                               child: FutureBuilder<List<Province>>(
                                 future: provinceData,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.done) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
                                     return DropdownButton(
                                       isExpanded: true,
                                       value: originProv,
@@ -174,10 +191,13 @@ class _OngkirpageState extends State<Ongkirpage> {
                               child: FutureBuilder<List<City>>(
                                 future: cityDataOrigin,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.done) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
                                     return DropdownButton(
                                       isExpanded: true,
-                                      value: originCity == null ? originCity : null,
+                                      value: originCity == null
+                                          ? originCity
+                                          : null,
                                       icon: Icon(Icons.arrow_drop_down),
                                       iconSize: 30,
                                       elevation: 16,
@@ -196,10 +216,9 @@ class _OngkirpageState extends State<Ongkirpage> {
                                       onChanged: (newValue) {
                                         setState(() {
                                           originCity = newValue;
-                                          cityId = originCity.cityId;
+                                          cityIdOri = originCity.cityId;
                                         });
 
-                                        
                                         // cityData = getCity(provId);
                                       },
                                     );
@@ -241,7 +260,8 @@ class _OngkirpageState extends State<Ongkirpage> {
                               child: FutureBuilder<List<Province>>(
                                 future: provinceData,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.done) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
                                     return DropdownButton(
                                       isExpanded: true,
                                       value: destinationProv,
@@ -282,10 +302,13 @@ class _OngkirpageState extends State<Ongkirpage> {
                               child: FutureBuilder<List<City>>(
                                 future: cityDataDestination,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.done) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
                                     return DropdownButton(
                                       isExpanded: true,
-                                      value: destinationCity == null ? destinationCity : null,
+                                      value: destinationCity == null
+                                          ? destinationCity
+                                          : null,
                                       icon: Icon(Icons.arrow_drop_down),
                                       iconSize: 30,
                                       elevation: 16,
@@ -304,7 +327,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                                       onChanged: (newValue) {
                                         setState(() {
                                           destinationCity = newValue;
-                                          cityId = destinationCity.cityId;
+                                          cityIdDes = destinationCity.cityId;
                                         });
 
                                         // originCity = null;
@@ -313,7 +336,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                                     );
                                   } else if (snapshot.hasError) {
                                     return Text("Tidak ada data!");
-                                  } 
+                                  }
 
                                   if (destinationProv == null) {
                                     return Text("Pilih Provinsi Dulu !");
@@ -334,18 +357,27 @@ class _OngkirpageState extends State<Ongkirpage> {
                           style: TextButton.styleFrom(
                               backgroundColor: Colors.blue),
                           onPressed: () {
-                            if (originCity != null && destinationCity != null) {
-                              Fluttertoast.showToast(
-                                  msg: "Origin: " +
-                                      originCity.cityName.toString() +
-                                      ", Destination: " +
-                                      destinationCity.cityName.toString(),
-                                  backgroundColor: Colors.green);
+                            // if (originCity != null && destinationCity != null) {
+                            //   Fluttertoast.showToast(
+                            //       msg: "Origin: " +
+                            //           originCity.cityName.toString() +
+                            //           ", Destination: " +
+                            //           destinationCity.cityName.toString(),
+                            //       backgroundColor: Colors.green);
+                            // } else {
+                            //   Fluttertoast.showToast(
+                            //       msg:
+                            //           "Origin dan atau Destination masih belum diisi!",
+                            //       backgroundColor: Colors.red);
+                            // }
+
+                            if (cityIdDes.isEmpty ||
+                                cityIdOri.isEmpty ||
+                                selectedkurir.isEmpty ||
+                                ctrlBerat.text.isEmpty) {
+                              UiToast.toastErr("Semua Field Harus di isi");
                             } else {
-                              Fluttertoast.showToast(
-                                  msg:
-                                      "Origin dan atau Destination masih belum diisi!",
-                                  backgroundColor: Colors.red);
+                              getCostsData();
                             }
                           },
                           child: Text("Hitung Estimasi Harga",
@@ -362,9 +394,23 @@ class _OngkirpageState extends State<Ongkirpage> {
                 Flexible(
                   flex: 2,
                   child: Container(
-
-                  ),
-                )
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: listCosts.isEmpty
+                          ? const Align(
+                              alignment: Alignment.center,
+                              child: Text("Belum ada data"))
+                          : ListView.builder(
+                              itemCount: listCosts.length,
+                              itemBuilder: (context, index) {
+                                return LazyLoadingList(
+                                    initialSizeOfItems: 10,
+                                    loadMore: () {},
+                                    child: CardOngkir(listCosts[index]),
+                                    index: index,
+                                    hasMore: true);
+                              })),
+                ),
               ],
             ),
           ),
